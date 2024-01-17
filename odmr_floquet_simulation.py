@@ -138,9 +138,15 @@ t3 = time.perf_counter()
 for i, RF_freq in enumerate(RF_freqs):
     for j, MW_freq in enumerate(MW_freqs):
         P_0_B[i][j] = P_alpha_beta('0', 'B', eigvecs[i][j])
-        P_0_D[i][j] = P_alpha_beta('0', 'D', eigvecs[i][j])
-        P_0_0[i][j] = P_alpha_beta('0', '0', eigvecs[i][j])
 t4 = time.perf_counter()
+for i, RF_freq in enumerate(RF_freqs):
+    for j, MW_freq in enumerate(MW_freqs):
+        P_0_D[i][j] = P_alpha_beta('0', 'D', eigvecs[i][j])
+t5 = time.perf_counter()
+for i, RF_freq in enumerate(RF_freqs):
+    for j, MW_freq in enumerate(MW_freqs):
+        P_0_0[i][j] = P_alpha_beta('0', '0', eigvecs[i][j])
+t6 = time.perf_counter()
 class SimulationParams:
     def __repr__(self):
         return self.__class__.__name__ + '(' + str(list(self.__dict__.keys())) + ')'
@@ -158,12 +164,14 @@ params.Omega_RF_power = Omega_RF_power
 params.N = N
 np.savez_compressed(simulation_start.strftime("%Y-%m-%d_%H_%M_%S") + '_P.npz', P_0_B=P_0_B, P_0_D=P_0_D, P_0_0=P_0_0)
 
-t5 = time.perf_counter()
+t7 = time.perf_counter()
 
 print("preamble = {}".format(t1-t0))
 print("initialize hamiltonians = {}".format(t2-t1))
 print("diagonalize hamiltonians = {}".format(t3-t2))
-print("find P0 = {}".format(t4-t3))
-print("postamble = {}".format(t5-t4))
-print("total = {}".format(t5-t0))
+print("find P_0_B = {}".format(t4-t3))
+print("find P_0_D = {}".format(t5-t4))
+print("find P_0_0 = {}".format(t6-t5))
+print("postamble = {}".format(t7-t6))
+print("total = {}".format(t7-t0))
 
