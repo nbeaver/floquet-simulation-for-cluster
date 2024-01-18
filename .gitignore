@@ -1,2 +1,4 @@
 .idea/
 *.npz
+slurm-*.out
+time_*.txt
