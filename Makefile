@@ -1,0 +1,2 @@
+run:
+	sbatch run.sh
