@@ -135,10 +135,6 @@ def do_simulation(params):
     results.P_0_B_std = np.std(results.P_0_B, axis=0)
     results.P_0_D_std = np.std(results.P_0_D, axis=0)
 
-    del results.P_0_0
-    del results.P_0_B
-    del results.P_0_D
-
     results.compression = {
         'P_0_0': 'lzf',
         'P_0_B': 'lzf',
@@ -193,6 +189,10 @@ def main():
         default=50,
         help='parameter sweep number of steps')
     parser.add_argument(
+        '--tag-filename',
+        default='',
+        help='tag to add to filename')
+    parser.add_argument(
         '--out-dir',
         default='.',
         help='output directory')
@@ -229,13 +229,30 @@ def main():
             params.N_avg = args.n_avg
         setup_params(params)
         params, results = do_simulation(params)
-        filename = "odmr_floquet_monte_carlo_B_x_{:04d}.hdf5".format(i)
-        filepath = os.path.join(outdir, filename)
+        filename = "odmr_floquet_monte_carlo_B_x_{}_{:04d}.hdf5".format(args.tag_filename, i)
+        parent_dir = os.path.join(outdir, "full")
+        os.makedirs(parent_dir, exist_ok=True)
+        filepath = os.path.join(parent_dir, filename)
         esdr_floquet_lib.write_simulation_info_to_hdf5_file(
             params,
             results,
             filepath=filepath
         )
+        # Save data sets that only have the averages and so are ~1/N_avg smaller.
+        del results.P_0_0
+        del results.P_0_B
+        del results.P_0_D
+        del filename, parent_dir, filepath # avoid re-using these variables
+        filename = "odmr_floquet_monte_carlo_B_x_{}_avg_{:04d}.hdf5".format(args.tag_filename, i)
+        parent_dir = os.path.join(outdir, "avg")
+        os.makedirs(parent_dir, exist_ok=True)
+        filepath = os.path.join(parent_dir, filename)
+        esdr_floquet_lib.write_simulation_info_to_hdf5_file(
+            params,
+            results,
+            filepath=filepath
+        )
+        del filename, parent_dir, filepath  # avoid re-using these variables
 
 if __name__ == '__main__':
     main()
