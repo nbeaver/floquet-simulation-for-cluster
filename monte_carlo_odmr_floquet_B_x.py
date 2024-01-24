@@ -170,12 +170,28 @@ def do_simulation(params):
 
     return params, results
 def main():
+    gauss = 1e-4  # T
     parser = argparse.ArgumentParser(
         description='ODMR simulation via Floquet, B_x Monte Carlo')
     parser.add_argument(
         '--n-avg',
         type=int,
         help='number of averages')
+    parser.add_argument(
+        '--param-start',
+        type=float,
+        default=0.0*gauss,
+        help='parameter sweep start value')
+    parser.add_argument(
+        '--param-stop',
+        type=float,
+        default=100*gauss,
+        help='parameter sweep stop value')
+    parser.add_argument(
+        '--param-steps',
+        type=int,
+        default=50,
+        help='parameter sweep number of steps')
     parser.add_argument(
         '--out-dir',
         default='.',
@@ -202,10 +218,9 @@ def main():
     logger.setLevel(args.loglevel)
     outdir = args.out_dir
 
-    gauss = 1e-4  # T
-    start = 0.0*gauss
-    stop = 100*gauss
-    n_steps = 50
+    start = args.param_start
+    stop = args.param_stop
+    n_steps = args.param_steps
     for i, sigma_B_x in enumerate(np.linspace(start, stop, n_steps)):
         logging.info("{} of {}".format(i+1, n_steps)) # crude progress meter
         params = get_params()
