@@ -3,6 +3,7 @@
 #SBATCH --time=24:00:00
 #SBATCH --job-name=odmr_floquet_B_z
 #SBATCH --partition=short
+#SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=ALL
 module load anaconda3/2022.05
 OUTDIR=/scratch/n.beaver/2024-01-24
