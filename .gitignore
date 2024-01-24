@@ -3,3 +3,5 @@
 *.lnk
 slurm-*.out
 time_*.txt
+*.ipynb
+*.hdf5

@@ -4,8 +4,6 @@ import time
 import h5py
 import esdr_floquet_lib
 
-# TODO: add a --dry-run parameter
-
 t0 = time.perf_counter()
 simulation_start = datetime.datetime.now()
 

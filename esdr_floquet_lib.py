@@ -21,23 +21,20 @@ def get_Fm_Hm(
         lambda_d,
         Omega_RF_power,
 ):
-    ω_MW = omega_MW
-    λb = lambda_b
-    λd = lambda_d
-    Ω_RF = Omega_RF_power
 
-    Δ_MW = D_GS - ω_MW
-    Δb_MW = Δ_MW + M_x
-    Δd_MW = Δ_MW - M_x
+    Delta_MW = D_GS - omega_MW
+    Delta_b_MW = Delta_MW + M_x
+    Delta_d_MW = Delta_MW - M_x
+
     H0 = np.array([
-        [Δb_MW, λb,     0],
-        [λb,    0,      1j*λd],
-        [0,     -1j*λd, Δd_MW],
+        [Delta_b_MW,  lambda_b,     0          ],
+        [lambda_b,    0,            1j*lambda_d],
+        [0,           -1j*lambda_d, Delta_d_MW ],
     ])
     H1 = np.array([
-        [0,    0, Ω_RF],
-        [0,    0, 0],
-        [Ω_RF, 0, 0],
+        [0,              0, Omega_RF_power],
+        [0,              0, 0             ],
+        [Omega_RF_power, 0, 0             ],
     ])
     z3x3 = np.array(np.zeros((3, 3)))
     N = 2*n+1
@@ -99,24 +96,44 @@ def P_alpha_beta(alpha, beta, eigenvectors):
             P_ab += np.abs(np.vdot(this_beta_n_bra, eigenket)**2 * np.vdot(eigenbra, alpha_0_ket)**2)
     return P_ab
 
-def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x):
-    V = np.hypot(M_x, omega_L)
-    numerator = (M_x + V)*lambda_b - 1j*omega_L*lambda_d
-    denominator = np.hypot(M_x+V, omega_L)
+def get_D_GS_eff(D_GS, M_x, B_x, B_y):
+    """
+    Effective zero-field splitting.
+    """
+    gamma_NV = 2.8025e10 # Hz/T
+    term_x = np.square(gamma_NV*B_x)/(D_GS+M_x)
+    term_y = np.square(gamma_NV*B_y)/(D_GS-M_x)
+    D_GS_eff = D_GS + (3./2)*(term_x + term_y)
+    return D_GS_eff
+
+def get_M_x_eff(D_GS, M_x, B_x, B_y):
+    """
+    Effective strain along x-direction.
+    """
+    gamma_NV = 2.8025e10 # Hz/T
+    term_x = np.square(gamma_NV*B_x)/(D_GS+M_x)
+    term_y = np.square(gamma_NV*B_y)/(D_GS-M_x)
+    M_x_eff = M_x + (1./2)*(term_x - term_y)
+    return M_x_eff
+
+def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
+    V = np.hypot(M_x_eff, omega_L)
+    numerator = (M_x_eff + V)*lambda_b - 1j*omega_L*lambda_d
+    denominator = np.hypot(M_x_eff + V, omega_L)
     lambda_b_prime = numerator/denominator
     return lambda_b_prime
 
-def get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x):
-    V = np.hypot(M_x, omega_L)
-    numerator = 1j*omega_L*lambda_b + (M_x + V)*lambda_d
-    denominator = np.hypot(M_x+V, omega_L)
+def get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
+    V = np.hypot(M_x_eff, omega_L)
+    numerator = 1j*omega_L*lambda_b + (M_x_eff + V)*lambda_d
+    denominator = np.hypot(M_x_eff + V, omega_L)
     lambda_d_prime = numerator/denominator
     return lambda_d_prime
 
 def get_H_F_prime(
     n,
-    D_GS,
-    M_x,
+    D_GS_eff,
+    M_x_eff,
     omega_MW,
     omega_RF,
     Omega_RF_power,
@@ -126,33 +143,33 @@ def get_H_F_prime(
     lambda_b_prime = None,
     lambda_d_prime = None,
 ):
-    V = np.hypot(M_x, omega_L)
+    V = np.hypot(M_x_eff, omega_L)
     if lambda_b_prime is None and lambda_b is not None and lambda_d is not None:
-        lambda_b_prime = get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x)
+        lambda_b_prime = get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff)
     elif lambda_b_prime is not None:
         pass
     else:
         raise ValueError("must specify either lambda_b or lambda_b_prime")
     if lambda_d_prime is None and lambda_b is not None and lambda_d is not None:
-        lambda_d_prime = get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x)
+        lambda_d_prime = get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff)
     elif lambda_d_prime is not None:
         pass
     else:
         raise ValueError("must specify either lambda_d or lambda_d_prime")
 
-    Delta_MW = D_GS - omega_MW
+    Delta_MW = D_GS_eff - omega_MW
     Delta_b_prime_no_omega_RF = Delta_MW + V
     Delta_d_prime_no_omega_RF = Delta_MW - V
     H0 = np.array([
         [Delta_b_prime_no_omega_RF,     lambda_b_prime,                   0],
         [np.conjugate(lambda_b_prime),  0,                                1j*lambda_d_prime],
         [0,                             np.conjugate(1j*lambda_d_prime),  Delta_d_prime_no_omega_RF],
-    ])
+    ], dtype=np.dtype('complex128'))
     H1 = np.array([
-        [omega_L*Omega_RF_power/V, 0, M_x*Omega_RF_power/V     ],
+        [omega_L*Omega_RF_power/V, 0, M_x_eff*Omega_RF_power/V ],
         [0,                        0, 0                        ],
-        [M_x*Omega_RF_power/V,     0, -omega_L*Omega_RF_power/V],
-    ])
+        [M_x_eff*Omega_RF_power/V, 0, -omega_L*Omega_RF_power/V],
+    ], dtype=np.dtype('complex128'))
     z3x3 = np.array(np.zeros((3, 3)))
     N = 2*n+1
     blocks = [ [ None for _ in range(N) ] for _ in range(N) ]
@@ -168,3 +185,42 @@ def get_H_F_prime(
     I_omega_RF_N = N_omega_matrix(n, omega_RF_freq = omega_RF)
     H_F_prime = Fm_Hm + I_omega_RF_N
     return H_F_prime
+
+class Params:
+    def __repr__(self):
+        return self.__class__.__name__ + '(' + str(list(self.__dict__.keys())) + ')'
+    def __str__(self):
+        return self.__class__.__name__ + '(' + str(list(self.__dict__.keys())) + ')'
+
+class Results:
+    def __repr__(self):
+        return self.__class__.__name__ + '(' + str(list(self.__dict__.keys())) + ')'
+    def __str__(self):
+        return self.__class__.__name__ + '(' + str(list(self.__dict__.keys())) + ')'
+def write_simulation_info_to_hdf5_file(params, results, filepath):
+    import h5py
+    with h5py.File(filepath, 'w') as fp:
+        results_group = fp.create_group("simulation_results")
+        for name, value in results.__dict__.items():
+            try:
+                if name in results.exclude:
+                    continue
+                elif name in results.compression:
+                    results_group.create_dataset(name, data=value, compression=results.compression[name])
+                else:
+                    results_group.create_dataset(name, data=value)
+            except TypeError:
+                print("name = '{}'".format(name))
+                raise
+        param_group = fp.create_group("simulation_params")
+        for name, value in params.__dict__.items():
+            try:
+                if name in params.exclude:
+                    continue
+                elif name in params.compression:
+                    param_group.create_dataset(name, data=value, compression=params.compression[name])
+                else:
+                    param_group.create_dataset(name, data=value)
+            except TypeError:
+                print("name = '{}'".format(name))
+                raise
