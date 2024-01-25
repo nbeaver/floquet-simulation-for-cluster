@@ -7,7 +7,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=4100MB
 module load anaconda3/2022.05
-OUTDIR=/scratch/n.beaver/2024-01-24
+OUTDIR=/scratch/n.beaver/2024/${SLURM_JOB_ID}
 LOG=time_$(date +%F_%s_%N).txt
 mkdir -p "${OUTDIR}"
 /usr/bin/time --output=${LOG} --verbose \
