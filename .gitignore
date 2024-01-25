@@ -2,6 +2,7 @@
 *.npz
 *.lnk
 slurm-*.out
+slurm_*/
 time_*.txt
 *.ipynb
 *.hdf5
