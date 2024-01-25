@@ -11,6 +11,6 @@ OUTDIR=/scratch/n.beaver/2024/${SLURM_JOB_ID}
 LOG=time_$(date +%F_%s_%N).txt
 mkdir -p "${OUTDIR}"
 /usr/bin/time --output=${LOG} --verbose \
-python3 monte_carlo_odmr_floquet_B_x.py --verbose \
+python3 monte_carlo_odmr_floquet_B_z.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}"
