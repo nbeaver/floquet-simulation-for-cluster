@@ -178,7 +178,7 @@ def main():
     parser.add_argument(
         '--param-start',
         type=float,
-        default=0.0,
+        default=2*pi*0.0*MHz,
         help='parameter sweep start value')
     parser.add_argument(
         '--param-stop',
