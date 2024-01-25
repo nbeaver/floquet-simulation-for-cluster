@@ -180,7 +180,7 @@ def main():
     parser.add_argument(
         '--param-stop',
         type=float,
-        default=100*gauss,
+        default=5*gauss,
         help='parameter sweep stop value')
     parser.add_argument(
         '--param-steps',
