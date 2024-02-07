@@ -11,7 +11,7 @@ OUTDIR=/scratch/n.beaver/2024/${SLURM_JOB_ID}
 LOG=time_$(date +%F_%s_%N).txt
 mkdir -p "${OUTDIR}"
 
-# Save environemnt and job information to local directory.
+# Save environment and job information to local directory.
 local_dir=./slurm_${SLURM_JOB_ID}
 mkdir -p "${local_dir}"
 cp "$0" "${local_dir}"
