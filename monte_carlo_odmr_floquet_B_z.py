@@ -23,6 +23,7 @@ def get_B_random(mean, stdev, shape=None, rng=None):
         rng = np.random.default_rng(seed)
     B_random = rng.normal(size=shape, loc=mean, scale=stdev)
     return B_random
+
 def get_params():
     from math import pi
     MHz = 1e6
@@ -31,8 +32,8 @@ def get_params():
     gauss = 1e-4 # T
     p = esdr_floquet_lib.Params()
     p.gamma_NV = gamma_NV
-    p.B_x = 3*gauss
-    p.B_y = 3*gauss
+    p.B_x = 0*gauss
+    p.B_y = 0*gauss
     # p.B_z = 5*gauss
     p.M_x = 2.0*MHz*(2*pi)
     p.N = 4
@@ -48,7 +49,7 @@ def get_params():
 
     # Monte Carlo parameters.
     p.N_avg = 300
-    p.mu_B_z = 0.0*gauss
+    p.mu_B_z = 5.0*gauss
     p.sigma_B_z = 5*gauss
     return p
 

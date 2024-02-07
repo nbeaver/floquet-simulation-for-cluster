@@ -31,8 +31,8 @@ def get_params():
     p.gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     gauss = 1e-4 # T
     p = esdr_floquet_lib.Params()
-    p.B_x = 3*gauss
-    p.B_y = 3*gauss
+    p.B_x = 0*gauss
+    p.B_y = 0*gauss
     p.B_z = 5*gauss
     # p.M_x = 2.0*MHz*(2*pi)
     p.N = 4
@@ -48,7 +48,7 @@ def get_params():
 
     # Monte Carlo parameters.
     p.N_avg = 300
-    p.mu_M_x = 0.0
+    p.mu_M_x = 5.0*MHz*(2*pi)
     p.sigma_M_x = 2.0*MHz*(2*pi)
 
     return p
