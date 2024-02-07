@@ -91,6 +91,21 @@ def do_simulation(params):
     results.P_0_D = np.empty(H_shape[:-2])
     results.P_0_0 = np.empty(H_shape[:-2])
 
+    env_vars = [
+        'SLURM_JOB_START_TIME',
+        'SLURM_JOB_NAME',
+        'SLURM_MEM_PER_CPU',
+        'SLURM_JOB_ID',
+        'SLURM_JOB_USER',
+        'SLURM_SUBMIT_DIR',
+        'SLURM_JOB_ACCOUNT'
+    ]
+    for env_var in env_vars:
+        try:
+            setattr(results, env_var, os.environ[env_var])
+        except KeyError:
+            pass
+
     date_start = datetime.datetime.now()
     t_start = time.perf_counter()
     for i, B_z_i in enumerate(params.B_z):
