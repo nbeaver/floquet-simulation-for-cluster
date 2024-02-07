@@ -24,5 +24,5 @@ python3 monte_carlo_odmr_floquet_M_x.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
   --param-stop=6.28e6 \
-  --param-steps=50 \
+  --param-steps=51 \
   --n-avg=300
