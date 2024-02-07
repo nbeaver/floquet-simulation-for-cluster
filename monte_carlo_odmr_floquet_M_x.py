@@ -28,10 +28,9 @@ def get_params():
     from math import pi
     MHz = 1e6
     GHz = 1e9
-    gamma_NV = 2.8025e10 # Hz/T
+    p.gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     gauss = 1e-4 # T
     p = esdr_floquet_lib.Params()
-    p.gamma_NV = gamma_NV
     p.B_x = 3*gauss
     p.B_y = 3*gauss
     p.B_z = 5*gauss
@@ -57,14 +56,13 @@ def setup_params(params):
     from math import pi
     MHz = 1e6
     GHz = 1e9
-    gamma_NV = 2.8025e10 # Hz/T
     seed = secrets.randbits(128)
     params.random_seed = str(seed)
     rng = np.random.default_rng(seed)
     M_x_random = get_random(mean=params.mu_M_x, stdev=params.sigma_M_x, shape=params.N_avg, rng=rng)
     params.M_x = M_x_random
 
-    params.omega_L = gamma_NV*params.B_z*(2*pi)
+    params.omega_L = params.gamma_NV*params.B_z
     params.MW_start_freq = 2.87*GHz - 4*np.abs(params.sigma_M_x/(2*pi)) - 15*MHz
     params.MW_stop_freq = 2.87*GHz + 4*np.abs(params.sigma_M_x/(2*pi)) + 15*MHz
     params.MW_range = params.MW_stop_freq - params.MW_start_freq

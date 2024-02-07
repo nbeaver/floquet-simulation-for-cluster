@@ -27,7 +27,7 @@ def get_params():
     from math import pi
     MHz = 1e6
     GHz = 1e9
-    gamma_NV = 2.8025e10 # Hz/T
+    gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     gauss = 1e-4 # T
     p = esdr_floquet_lib.Params()
     p.gamma_NV = gamma_NV
@@ -56,16 +56,15 @@ def setup_params(params):
     from math import pi
     MHz = 1e6
     GHz = 1e9
-    gamma_NV = 2.8025e10 # Hz/T
     seed = secrets.randbits(128)
     params.random_seed = str(seed)
     rng = np.random.default_rng(seed)
     B_z_random = get_B_random(mean=params.mu_B_z, stdev=params.sigma_B_z, shape=params.N_avg, rng=rng)
     params.B_z = B_z_random
 
-    params.omega_L = gamma_NV*params.B_z*(2*pi)
-    params.MW_start_freq = 2.87*GHz - 4*np.abs(gamma_NV*params.sigma_B_z) - 15*MHz
-    params.MW_stop_freq = 2.87*GHz + 4*np.abs(gamma_NV*params.sigma_B_z) + 15*MHz
+    params.omega_L = params.gamma_NV*params.B_z
+    params.MW_start_freq = 2.87*GHz - 4*np.abs(params.gamma_NV*params.sigma_B_z/(2*pi)) - 15*MHz
+    params.MW_stop_freq = 2.87*GHz + 4*np.abs(params.gamma_NV*params.sigma_B_z/(2*pi)) + 15*MHz
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
