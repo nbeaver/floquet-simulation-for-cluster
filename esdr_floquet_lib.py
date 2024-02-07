@@ -119,7 +119,7 @@ def get_M_x_eff(D_GS, M_x, B_x, B_y):
     return M_x_eff
 
 def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
-    if omega_L == M_x_eff == 0.0:
+    if np.all(omega_L == 0) and np.all(M_x_eff == 0.0):
         return lambda_b
     V = np.hypot(M_x_eff, omega_L)
     numerator = (M_x_eff + V)*lambda_b - 1j*omega_L*lambda_d
@@ -128,7 +128,7 @@ def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     return lambda_b_prime
 
 def get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
-    if omega_L == M_x_eff == 0.0:
+    if np.all(omega_L == 0) and np.all(M_x_eff == 0.0):
         return lambda_d
     V = np.hypot(M_x_eff, omega_L)
     numerator = 1j*omega_L*lambda_b + (M_x_eff + V)*lambda_d
