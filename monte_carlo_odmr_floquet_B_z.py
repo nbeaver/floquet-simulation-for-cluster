@@ -63,8 +63,12 @@ def setup_params(params):
     params.B_z = B_z_random
 
     params.omega_L = params.gamma_NV*params.B_z
-    params.MW_start_freq = 2.87*GHz - 4*np.abs(params.gamma_NV*params.sigma_B_z/(2*pi)) - 15*MHz
-    params.MW_stop_freq = 2.87*GHz + 4*np.abs(params.gamma_NV*params.sigma_B_z/(2*pi)) + 15*MHz
+    omega_L_max = np.abs(params.omega_L).max()
+    shift_Hz = np.hypot(omega_L_max, params.M_x)/(2*pi)
+    # TODO: handle RF params
+    # TODO: handle Bx and By
+    params.MW_start_freq = (params.D_GS/(2*pi)) - shift_Hz - 15*MHz
+    params.MW_stop_freq = (params.D_GS/(2*pi)) + shift_Hz + 15*MHz
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
