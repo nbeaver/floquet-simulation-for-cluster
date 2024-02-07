@@ -100,7 +100,7 @@ def get_D_GS_eff(D_GS, M_x, B_x, B_y):
     """
     Effective zero-field splitting.
     """
-    gamma_NV = 2.8025e10 # Hz/T
+    gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     term_x = np.square(gamma_NV*B_x)/(D_GS+M_x)
     term_y = np.square(gamma_NV*B_y)/(D_GS-M_x)
     D_GS_eff = D_GS + (3./2)*(term_x + term_y)
@@ -110,7 +110,7 @@ def get_M_x_eff(D_GS, M_x, B_x, B_y):
     """
     Effective strain along x-direction.
     """
-    gamma_NV = 2.8025e10 # Hz/T
+    gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     term_x = np.square(gamma_NV*B_x)/(D_GS+M_x)
     term_y = np.square(gamma_NV*B_y)/(D_GS-M_x)
     M_x_eff = M_x + (1./2)*(term_x - term_y)
