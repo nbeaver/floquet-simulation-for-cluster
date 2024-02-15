@@ -187,6 +187,35 @@ def main():
         type=int,
         help='number of averages')
     parser.add_argument(
+        '--mu-By',
+        type=float,
+        help='mu_By [T]')
+    parser.add_argument(
+        '--Mx',
+        type=float,
+        default=None,
+        help='M_x [rad/s]')
+    parser.add_argument(
+        '--Bx',
+        type=float,
+        default=None,
+        help='B_x [T]')
+    parser.add_argument(
+        '--Bz',
+        type=float,
+        default=None,
+        help='B_z [T]')
+    parser.add_argument(
+        '--omega-rf-power',
+        type=float,
+        default=None,
+        help='RF power [rad/s]')
+    parser.add_argument(
+        '--omega-rf',
+        type=float,
+        default=None,
+        help='RF frequency [rad/s]')
+    parser.add_argument(
         '--param-start',
         type=float,
         default=0.0*gauss,
@@ -240,6 +269,16 @@ def main():
         params.sigma_B_y = sigma_B_y
         if args.n_avg is not None:
             params.N_avg = args.n_avg
+        if args.mu_By is not None:
+            params.mu_B_y = args.mu_By
+        if args.Mx is not None:
+            params.M_x = args.Mx
+        if args.Bx is not None:
+            params.B_x = args.Bx
+        if args.omega_rf_power is not None:
+            params.Omega_RF_power = args.omega_rf_power
+        if args.omega_rf is not None:
+            params.omega_RF = args.omega_rf
         setup_params(params)
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_B_y_{}_{:04d}.hdf5".format(args.tag_filename, i)
