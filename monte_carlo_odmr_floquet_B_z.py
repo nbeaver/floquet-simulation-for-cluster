@@ -16,7 +16,7 @@ def get_transition_probability_shape(arr1, arr2):
     shape = (len(arr1), len(arr2))
     return shape
 
-def get_B_random(mean, stdev, shape=None, rng=None):
+def get_random(mean, stdev, shape=None, rng=None):
     if rng is None:
         import secrets
         seed = secrets.randbits(128)
@@ -60,7 +60,7 @@ def setup_params(params):
     seed = secrets.randbits(128)
     params.random_seed = str(seed)
     rng = np.random.default_rng(seed)
-    B_z_random = get_B_random(mean=params.mu_B_z, stdev=params.sigma_B_z, shape=params.N_avg, rng=rng)
+    B_z_random = get_random(mean=params.mu_B_z, stdev=params.sigma_B_z, shape=params.N_avg, rng=rng)
     params.B_z = B_z_random
 
     params.omega_L = params.gamma_NV*params.B_z
