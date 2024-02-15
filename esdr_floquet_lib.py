@@ -118,7 +118,7 @@ def get_M_x_eff(D_GS, M_x, B_x, B_y):
     M_x_eff = M_x + (1./2)*(term_x - term_y)
     return M_x_eff
 
-def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
+def get_lambda_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     if np.all(omega_L == 0) and np.all(M_x_eff <= 0.0):
         return lambda_b
     V = np.hypot(M_x_eff, omega_L)
@@ -127,7 +127,7 @@ def get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     lambda_b_prime = numerator/denominator
     return lambda_b_prime
 
-def get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
+def get_lambda_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     if np.all(omega_L == 0) and np.all(M_x_eff <= 0.0):
         return lambda_d
     V = np.hypot(M_x_eff, omega_L)
@@ -151,13 +151,13 @@ def get_H_F_prime(
 ):
     V = np.hypot(M_x_eff, omega_L)
     if lambda_b_prime is None and lambda_b is not None and lambda_d is not None:
-        lambda_b_prime = get_lamba_b_prime(lambda_b, lambda_d, omega_L, M_x_eff)
+        lambda_b_prime = get_lambda_b_prime(lambda_b, lambda_d, omega_L, M_x_eff)
     elif lambda_b_prime is not None:
         pass
     else:
         raise ValueError("must specify either lambda_b or lambda_b_prime")
     if lambda_d_prime is None and lambda_b is not None and lambda_d is not None:
-        lambda_d_prime = get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff)
+        lambda_d_prime = get_lambda_d_prime(lambda_b, lambda_d, omega_L, M_x_eff)
     elif lambda_d_prime is not None:
         pass
     else:

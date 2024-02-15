@@ -1,6 +1,6 @@
 Yes do
 
-- [ ] Add flags for RF power, RF frequency, etc.
+- [x] Add flags for RF power, RF frequency, etc.
 
 Maybe do
 

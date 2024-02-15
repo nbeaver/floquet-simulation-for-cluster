@@ -72,9 +72,9 @@ def setup_params(params):
 
     params.D_GS_eff = esdr_floquet_lib.get_D_GS_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
     params.M_x_eff = esdr_floquet_lib.get_M_x_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
-    params.lambda_b_prime = esdr_floquet_lib.get_lamba_b_prime(
+    params.lambda_b_prime = esdr_floquet_lib.get_lambda_b_prime(
         params.lambda_b, params.lambda_b, params.omega_L, params.M_x_eff)
-    params.lambda_d_prime = esdr_floquet_lib.get_lamba_d_prime(
+    params.lambda_d_prime = esdr_floquet_lib.get_lambda_d_prime(
         params.lambda_b, params.lambda_b, params.omega_L, params.M_x_eff)
 def do_simulation(params):
     arr1 = params.B_x
@@ -187,6 +187,35 @@ def main():
         type=int,
         help='number of averages')
     parser.add_argument(
+        '--mu-Bx',
+        type=float,
+        help='mu_Bx [T]')
+    parser.add_argument(
+        '--Mx',
+        type=float,
+        default=None,
+        help='M_x [rad/s]')
+    parser.add_argument(
+        '--By',
+        type=float,
+        default=None,
+        help='B_y [T]')
+    parser.add_argument(
+        '--Bz',
+        type=float,
+        default=None,
+        help='B_z [T]')
+    parser.add_argument(
+        '--omega-rf-power',
+        type=float,
+        default=None,
+        help='RF power [rad/s]')
+    parser.add_argument(
+        '--omega-rf',
+        type=float,
+        default=None,
+        help='RF frequency [rad/s]')
+    parser.add_argument(
         '--param-start',
         type=float,
         default=0.0*gauss,
@@ -240,6 +269,16 @@ def main():
         params.sigma_B_x = sigma_B_x
         if args.n_avg is not None:
             params.N_avg = args.n_avg
+        if args.mu_Bx is not None:
+            params.mu_B_x = args.mu_Bx
+        if args.Mx is not None:
+            params.M_x = args.Mx
+        if args.By is not None:
+            params.B_y = args.By
+        if args.omega_rf_power is not None:
+            params.Omega_RF_power = args.omega_rf_power
+        if args.omega_rf is not None:
+            params.omega_RF = args.omega_rf
         setup_params(params)
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_B_x_{}_{:04d}.hdf5".format(args.tag_filename, i)
