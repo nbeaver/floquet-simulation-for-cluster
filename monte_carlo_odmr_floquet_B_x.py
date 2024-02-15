@@ -72,9 +72,9 @@ def setup_params(params):
 
     params.D_GS_eff = esdr_floquet_lib.get_D_GS_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
     params.M_x_eff = esdr_floquet_lib.get_M_x_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
-    params.lambda_b_prime = esdr_floquet_lib.get_lamba_b_prime(
+    params.lambda_b_prime = esdr_floquet_lib.get_lambda_b_prime(
         params.lambda_b, params.lambda_b, params.omega_L, params.M_x_eff)
-    params.lambda_d_prime = esdr_floquet_lib.get_lamba_d_prime(
+    params.lambda_d_prime = esdr_floquet_lib.get_lambda_d_prime(
         params.lambda_b, params.lambda_b, params.omega_L, params.M_x_eff)
 def do_simulation(params):
     arr1 = params.B_x

@@ -127,7 +127,7 @@ def get_lambda_b_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     lambda_b_prime = numerator/denominator
     return lambda_b_prime
 
-def get_lamba_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
+def get_lambda_d_prime(lambda_b, lambda_d, omega_L, M_x_eff):
     if np.all(omega_L == 0) and np.all(M_x_eff <= 0.0):
         return lambda_d
     V = np.hypot(M_x_eff, omega_L)
