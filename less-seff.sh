@@ -1,1 +1,1 @@
-tail --lines=+1 slurm_*/seff_* | less
+tail --lines=+1 slurm_job_info/*/seff_* | less

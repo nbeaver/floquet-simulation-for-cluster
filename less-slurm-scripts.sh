@@ -1,1 +1,1 @@
-tail --lines=+1 slurm_*/slurm_script | less
+tail --lines=+1 slurm_job_info/*/slurm_script | less
