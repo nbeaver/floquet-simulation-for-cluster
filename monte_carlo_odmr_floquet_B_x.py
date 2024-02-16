@@ -24,6 +24,7 @@ def get_random(mean, stdev, shape=None, rng=None):
         rng = np.random.default_rng(seed)
     B_random = rng.normal(size=shape, loc=mean, scale=stdev)
     return B_random
+
 def get_params():
     from math import pi
     MHz = 1e6
@@ -63,8 +64,11 @@ def setup_params(params):
     params.B_x = B_x_random
 
     params.omega_L = params.gamma_NV*params.B_z
+    # TODO: handle RF params
+    # TODO: handle Bx and By
     params.MW_start_freq = 2.87*GHz - np.abs(params.omega_L/(2*pi)) - 15*MHz
     params.MW_stop_freq = 2.87*GHz + np.abs(params.omega_L/(2*pi)) + 15*MHz
+
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting

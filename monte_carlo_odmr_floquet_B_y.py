@@ -64,6 +64,8 @@ def setup_params(params):
     params.omega_L = params.gamma_NV*params.B_z
     params.MW_start_freq = 2.87*GHz - np.abs(params.omega_L/(2*pi)) - 15*MHz
     params.MW_stop_freq  = 2.87*GHz + np.abs(params.omega_L/(2*pi)) + 15*MHz
+    # TODO: handle RF params
+    # TODO: handle Bx and By
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting

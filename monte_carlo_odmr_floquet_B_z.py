@@ -28,10 +28,9 @@ def get_params():
     from math import pi
     MHz = 1e6
     GHz = 1e9
-    gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     gauss = 1e-4 # T
     p = esdr_floquet_lib.Params()
-    p.gamma_NV = gamma_NV
+    p.gamma_NV = gamma_NV = (2*pi)*2.8025e10 # rad/(s T)
     p.B_x = 0*gauss
     p.B_y = 0*gauss
     # p.B_z = 5*gauss
