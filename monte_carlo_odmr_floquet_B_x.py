@@ -12,17 +12,19 @@ logger = logging.getLogger(__name__)
 def get_Floquet_Hamiltonian_shape(arr1, arr2, N):
     shape = (len(arr1), len(arr2), 6*N+3, 6*N+3)
     return shape
+
 def get_transition_probability_shape(arr1, arr2):
     shape = (len(arr1), len(arr2))
     return shape
 
-def get_B_random(mean, stdev, shape=None, rng=None):
+def get_random(mean, stdev, shape=None, rng=None):
     if rng is None:
         import secrets
         seed = secrets.randbits(128)
         rng = np.random.default_rng(seed)
     B_random = rng.normal(size=shape, loc=mean, scale=stdev)
     return B_random
+
 def get_params():
     from math import pi
     MHz = 1e6
@@ -58,12 +60,15 @@ def setup_params(params):
     seed = secrets.randbits(128)
     params.random_seed = str(seed)
     rng = np.random.default_rng(seed)
-    B_x_random = get_B_random(mean=params.mu_B_x, stdev=params.sigma_B_x, shape=params.N_avg, rng=rng)
+    B_x_random = get_random(mean=params.mu_B_x, stdev=params.sigma_B_x, shape=params.N_avg, rng=rng)
     params.B_x = B_x_random
 
     params.omega_L = params.gamma_NV*params.B_z
+    # TODO: handle RF params
+    # TODO: handle Bx and By
     params.MW_start_freq = 2.87*GHz - np.abs(params.omega_L/(2*pi)) - 15*MHz
     params.MW_stop_freq = 2.87*GHz + np.abs(params.omega_L/(2*pi)) + 15*MHz
+
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
@@ -188,47 +193,48 @@ def main():
         help='number of averages')
     parser.add_argument(
         '--mu-Bx',
-        type=float,
+        type=str,
+        default=None,
         help='mu_Bx [T]')
     parser.add_argument(
         '--Mx',
-        type=float,
+        type=str,
         default=None,
         help='M_x [rad/s]')
     parser.add_argument(
         '--By',
-        type=float,
+        type=str,
         default=None,
         help='B_y [T]')
     parser.add_argument(
         '--Bz',
-        type=float,
+        type=str,
         default=None,
         help='B_z [T]')
     parser.add_argument(
         '--omega-rf-power',
-        type=float,
+        type=str,
         default=None,
         help='RF power [rad/s]')
     parser.add_argument(
         '--omega-rf',
-        type=float,
+        type=str,
         default=None,
         help='RF frequency [rad/s]')
     parser.add_argument(
         '--param-start',
-        type=float,
-        default=0.0*gauss,
+        type=str,
+        default='0.0e-4',
         help='parameter sweep start value')
     parser.add_argument(
         '--param-stop',
-        type=float,
-        default=100*gauss,
+        type=str,
+        default='100e-4',
         help='parameter sweep stop value')
     parser.add_argument(
         '--param-steps',
         type=int,
-        default=50,
+        default=51,
         help='parameter sweep number of steps')
     parser.add_argument(
         '--tag-filename',
@@ -260,8 +266,8 @@ def main():
     logger.setLevel(args.loglevel)
     outdir = args.out_dir
 
-    start = args.param_start
-    stop = args.param_stop
+    start = float(eval(args.param_start))
+    stop = float(eval(args.param_stop))
     n_steps = args.param_steps
     for i, sigma_B_x in enumerate(np.linspace(start, stop, n_steps)):
         logging.info("{} of {}".format(i+1, n_steps)) # crude progress meter
@@ -270,15 +276,17 @@ def main():
         if args.n_avg is not None:
             params.N_avg = args.n_avg
         if args.mu_Bx is not None:
-            params.mu_B_x = args.mu_Bx
+            params.mu_B_x = float(eval(args.mu_Bx))
         if args.Mx is not None:
-            params.M_x = args.Mx
+            params.M_x = float(eval(args.Mx))
+        if args.Bz is not None:
+            params.B_z = float(eval(args.Bz))
         if args.By is not None:
-            params.B_y = args.By
+            params.B_y = float(eval(args.By))
         if args.omega_rf_power is not None:
-            params.Omega_RF_power = args.omega_rf_power
+            params.Omega_RF_power = float(eval(args.omega_rf_power))
         if args.omega_rf is not None:
-            params.omega_RF = args.omega_rf
+            params.omega_RF = float(eval(args.omega_rf))
         setup_params(params)
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_B_x_{}_{:04d}.hdf5".format(args.tag_filename, i)
