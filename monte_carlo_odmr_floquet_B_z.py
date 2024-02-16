@@ -195,47 +195,48 @@ def main():
         help='number of averages')
     parser.add_argument(
         '--mu-Bz',
-        type=float,
+        type=str,
+        default=None,
         help='mu_Bz [T]')
     parser.add_argument(
         '--Mx',
-        type=float,
+        type=str,
         default=None,
         help='M_x [rad/s]')
     parser.add_argument(
         '--Bx',
-        type=float,
+        type=str,
         default=None,
         help='B_x [T]')
     parser.add_argument(
         '--By',
-        type=float,
+        type=str,
         default=None,
         help='B_y [T]')
     parser.add_argument(
         '--omega-rf-power',
-        type=float,
+        type=str,
         default=None,
         help='RF power [rad/s]')
     parser.add_argument(
         '--omega-rf',
-        type=float,
+        type=str,
         default=None,
         help='RF frequency [rad/s]')
     parser.add_argument(
         '--param-start',
-        type=float,
-        default=0.0*gauss,
+        type=str,
+        default='0.0e-4',
         help='parameter sweep start value')
     parser.add_argument(
         '--param-stop',
-        type=float,
-        default=5*gauss,
+        type=str,
+        default='5e-4',
         help='parameter sweep stop value')
     parser.add_argument(
         '--param-steps',
         type=int,
-        default=50,
+        default=51,
         help='parameter sweep number of steps')
     parser.add_argument(
         '--tag-filename',
@@ -267,8 +268,8 @@ def main():
     logger.setLevel(args.loglevel)
     outdir = args.out_dir
 
-    start = args.param_start
-    stop = args.param_stop
+    start = float(eval(args.param_start))
+    stop = float(eval(args.param_stop))
     n_steps = args.param_steps
     for i, sigma_B_z in enumerate(np.linspace(start, stop, n_steps)):
         logging.info("{} of {}".format(i+1, n_steps)) # crude progress meter
@@ -277,17 +278,17 @@ def main():
         if args.n_avg is not None:
             params.N_avg = args.n_avg
         if args.mu_Bz is not None:
-            params.mu_B_z = args.mu_Bz
+            params.mu_B_z = float(eval(args.mu_Bz))
         if args.Mx is not None:
-            params.M_x = args.Mx
+            params.M_x = float(eval(args.Mx))
         if args.Bx is not None:
-            params.B_x = args.Bx
+            params.B_x = float(eval(args.Bx))
         if args.By is not None:
-            params.B_y = args.By
+            params.B_y = float(eval(args.By))
         if args.omega_rf_power is not None:
-            params.Omega_RF_power = args.omega_rf_power
+            params.Omega_RF_power = float(eval(args.omega_rf_power))
         if args.omega_rf is not None:
-            params.omega_RF = args.omega_rf
+            params.omega_RF = float(eval(args.omega_rf))
         setup_params(params)
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_B_z_{}_{:04d}.hdf5".format(args.tag_filename, i)
