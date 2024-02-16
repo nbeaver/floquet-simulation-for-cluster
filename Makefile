@@ -1,2 +1,2 @@
 run:
-	sbatch run.sh
+	./run.sh
