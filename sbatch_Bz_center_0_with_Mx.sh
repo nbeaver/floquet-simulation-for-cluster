@@ -33,4 +33,4 @@ python3 monte_carlo_odmr_floquet_B_z.py --verbose \
   --By=0.0 \
   --omega-rf-power=0.0 \
   --omega-rf=0.0 \
-  --n-avg=300
+  --n-avg=100
