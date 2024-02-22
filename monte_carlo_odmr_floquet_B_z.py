@@ -74,8 +74,8 @@ def setup_params(params):
     shift_Hz = np.hypot(omega_L_max, params.M_x)/(2*pi)
     # TODO: handle RF params
     # TODO: handle Bx and By
-    params.MW_start_freq = (params.D_GS/(2*pi)) - shift_Hz - 15*MHz
-    params.MW_stop_freq = (params.D_GS/(2*pi)) + shift_Hz + 15*MHz
+    params.MW_start_freq = round((params.D_GS/(2*pi)) - shift_Hz - 15*MHz)
+    params.MW_stop_freq = round((params.D_GS/(2*pi)) + shift_Hz + 15*MHz)
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
