@@ -193,6 +193,7 @@ def main():
     gauss = 1e-4  # T
     MHz = 1e6
     pi = np.pi
+    # TODO: add flag for MW_step
     parser = argparse.ArgumentParser(
         description='ODMR simulation via Floquet, B_z Monte Carlo')
     parser.add_argument(
