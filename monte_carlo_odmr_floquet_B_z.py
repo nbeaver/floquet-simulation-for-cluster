@@ -61,9 +61,16 @@ def setup_params(params):
     rng = np.random.default_rng(seed)
     B_z_random = get_random(mean=params.mu_B_z, stdev=params.sigma_B_z, shape=params.N_avg, rng=rng)
     params.B_z = B_z_random
+    # We need consistent values for MW_start_freq and MW_stop_freq
+    # to enable averaging, but since these values are randomly chosen
+    # we don't know in advance what the largest will be.
+    # So we use a value of mu + n*sigma, which should capture almost all values
+    # (missing perhaps 1 in 15787 for 4 sigma).
+    n_sigma = 4
+    B_z_max = params.mu_B_z + n_sigma*params.sigma_B_z
 
     params.omega_L = params.gamma_NV*params.B_z
-    omega_L_max = np.abs(params.omega_L).max()
+    omega_L_max = params.gamma_NV*B_z_max
     shift_Hz = np.hypot(omega_L_max, params.M_x)/(2*pi)
     # TODO: handle RF params
     # TODO: handle Bx and By
