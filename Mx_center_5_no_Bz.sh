@@ -1,7 +1,7 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=B_z_center_5_no_Mx
+#SBATCH --job-name=M_x_center_5_no_Bz
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=ALL
@@ -20,16 +20,16 @@ echo "$0" > "${local_dir}/info.txt"
 echo "$*" >> "${local_dir}/info.txt"
 
 /usr/bin/time --output=${LOG} --verbose \
-python3 monte_carlo_odmr_floquet_B_z.py --verbose \
+python3 monte_carlo_odmr_floquet_M_x.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
-  --param-start=1.0e-4 \
-  --param-stop=0.0e-4 \
+  --param-start=1*pi*2e6 \
+  --param-stop=0*pi*2e6 \
   --param-steps=51 \
-  --mu-Bz=5e-4 \
-  --Mx=0.0 \
+  --mu-Mx=5*pi*2e6 \
   --Bx=0.0 \
   --By=0.0 \
+  --Bz=0.0 \
   --omega-rf-power=0.0 \
   --omega-rf=0.0 \
   --n-avg=300
