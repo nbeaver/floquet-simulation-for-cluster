@@ -59,6 +59,10 @@ def setup_params(params):
     seed = secrets.randbits(128)
     params.random_seed = str(seed)
     rng = np.random.default_rng(seed)
+
+    params.D_GS_eff = esdr_floquet_lib.get_D_GS_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
+    params.M_x_eff = esdr_floquet_lib.get_M_x_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
+
     B_z_random = get_random(mean=params.mu_B_z, stdev=params.sigma_B_z, shape=params.N_avg, rng=rng)
     params.B_z = B_z_random
     # We need consistent values for MW_start_freq and MW_stop_freq
@@ -71,19 +75,19 @@ def setup_params(params):
 
     params.omega_L = params.gamma_NV*params.B_z
     omega_L_max = params.gamma_NV*B_z_max
-    shift_Hz = np.hypot(omega_L_max, params.M_x)/(2*pi)
-    # TODO: handle RF params
-    # TODO: handle Bx and By
-    params.MW_start_freq = round((params.D_GS/(2*pi)) - shift_Hz - 15*MHz)
-    params.MW_stop_freq = round((params.D_GS/(2*pi)) + shift_Hz + 15*MHz)
+    V = np.hypot(omega_L_max, params.M_x_eff)
+    # Estimate shift based on resonant frequencies.
+    shift = params.omega_RF/2. + np.hypot(V - params.omega_RF/2., params.Omega_RF_power)
+    shift_Hz = shift/(2*pi)
+    # Add on an extra 15 MHz to allow for peak width.
+    params.MW_start_freq = round((params.D_GS_eff/(2*pi)) - shift_Hz - 15*MHz)
+    params.MW_stop_freq = round((params.D_GS_eff/(2*pi)) + shift_Hz + 15*MHz)
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
     params.MW_freqs = np.linspace(params.MW_start_freq, params.MW_stop_freq, params.MW_N_steps)
     params.omega_MWs = params.MW_freqs*2*pi
 
-    params.D_GS_eff = esdr_floquet_lib.get_D_GS_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
-    params.M_x_eff = esdr_floquet_lib.get_M_x_eff(params.D_GS, params.M_x, params.B_x, params.B_y)
     params.lambda_b_prime = esdr_floquet_lib.get_lambda_b_prime(
         params.lambda_b, params.lambda_b, params.omega_L, params.M_x_eff)
     params.lambda_d_prime = esdr_floquet_lib.get_lambda_d_prime(
