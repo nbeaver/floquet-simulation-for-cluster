@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
-prefix="slurm_"
-for d in slurm_*;
+prefix="slurm_job_info/"
+for d in slurm_job_info/*;
 do
     jobid=${d#"$prefix"}
     seff "${jobid}" > "${d}/seff_${jobid}"
