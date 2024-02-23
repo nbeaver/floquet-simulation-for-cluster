@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 def get_Floquet_Hamiltonian_shape(arr1, arr2, N):
     shape = (len(arr1), len(arr2), 6*N+3, 6*N+3)
     return shape
+
 def get_transition_probability_shape(arr1, arr2):
     shape = (len(arr1), len(arr2))
     return shape
@@ -62,13 +63,31 @@ def setup_params(params):
     params.B_y = get_random(mean=params.mu_B_y, stdev=params.sigma_B_y, shape=params.N_avg, rng=rng)
 
     params.omega_L = params.gamma_NV*params.B_z
-    params.MW_start_freq = 2.87*GHz - np.abs(params.omega_L/(2*pi)) - 15*MHz
-    params.MW_stop_freq  = 2.87*GHz + np.abs(params.omega_L/(2*pi)) + 15*MHz
-    # TODO: handle RF params
-    # TODO: handle Bx and By
+
+    # We need consistent values for MW_start_freq and MW_stop_freq
+    # to enable averaging, but since these values are randomly chosen
+    # we don't know in advance what the largest will be.
+    # So we use a value of mu + n*sigma, which should capture almost all values
+    # (missing perhaps 1 in 15787 for 4 sigma).
+    n_sigma = 4
+    B_y_max = params.mu_B_y + n_sigma*params.sigma_B_y
+    D_GS_eff_max = esdr_floquet_lib.get_D_GS_eff(params.D_GS, params.M_x, params.B_x, B_y_max)
+    # Non-zero B_y actually decreases M_x_eff,
+    # so the largest shift we need to prepare for is when B_y = 0.
+    B_y_min = 0.0
+    M_x_eff_max = esdr_floquet_lib.get_M_x_eff(params.D_GS, params.M_x, params.B_x, B_y_min)
+
+    V = np.hypot(params.omega_L, M_x_eff_max)
+    # Estimate shift based on resonant frequencies.
+    shift = params.omega_RF/2. + np.hypot(V - params.omega_RF/2., params.Omega_RF_power)
+    shift_Hz = shift/(2*pi)
+    # Add on an extra 15 MHz to allow for peak width
+    # and round to nearest Hz to avoid floating point rounding error.
+    params.MW_start_freq = round((params.D_GS/(2*pi)) - shift_Hz - 15*MHz)
+    params.MW_stop_freq = round((D_GS_eff_max/(2*pi)) + shift_Hz + 15*MHz)
+
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
-    # TODO: also account for RF splitting
     params.MW_freqs = np.linspace(params.MW_start_freq, params.MW_stop_freq, params.MW_N_steps)
     params.omega_MWs = params.MW_freqs*2*pi
 
@@ -232,7 +251,7 @@ def main():
     parser.add_argument(
         '--param-steps',
         type=int,
-        default=50,
+        default=51,
         help='parameter sweep number of steps')
     parser.add_argument(
         '--tag-filename',
