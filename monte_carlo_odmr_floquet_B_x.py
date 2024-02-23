@@ -22,8 +22,8 @@ def get_random(mean, stdev, shape=None, rng=None):
         import secrets
         seed = secrets.randbits(128)
         rng = np.random.default_rng(seed)
-    B_random = rng.normal(size=shape, loc=mean, scale=stdev)
-    return B_random
+    random = rng.normal(size=shape, loc=mean, scale=stdev)
+    return random
 
 def get_params():
     from math import pi
