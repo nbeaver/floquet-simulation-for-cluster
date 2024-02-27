@@ -223,7 +223,7 @@ def main():
         '--mu-D-GS',
         type=str,
         default=None,
-        help='mu_D_GS [Hz]')
+        help='mu_D_GS [rad/s]')
     parser.add_argument(
         '--Mx',
         type=str,
