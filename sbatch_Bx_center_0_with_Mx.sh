@@ -28,7 +28,7 @@ python3 monte_carlo_odmr_floquet_B_x.py --verbose \
   --param-stop=0.0e-4 \
   --param-steps=51 \
   --mu-Bx=0.0e-4 \
-  --Mx='2*pi*2e6' \
+  --Mx='2*pi*5e6' \
   --Bz=0.0 \
   --By=0.0 \
   --omega-rf-power=0.0 \

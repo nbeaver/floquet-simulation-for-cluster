@@ -1,7 +1,7 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=B_y_center_0_with_Mx
+#SBATCH --job-name=with_RF_B_y_center_0_with_Mx
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=FAIL,INVALID_DEPEND
@@ -28,9 +28,9 @@ python3 monte_carlo_odmr_floquet_B_y.py --verbose \
   --param-stop=0.0e-4 \
   --param-steps=51 \
   --mu-By=0.0e-4 \
-  --Mx='2*pi*5e6' \
+  --Mx=2*pi*5e6 \
   --Bz=0.0 \
   --Bx=0.0 \
-  --omega-rf-power=0.0 \
-  --omega-rf=0.0 \
+  --omega-rf-power=2*pi*2e6 \
+  --omega-rf=10*pi*2e6 \
   --n-avg=100

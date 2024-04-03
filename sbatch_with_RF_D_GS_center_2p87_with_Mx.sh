@@ -1,10 +1,10 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=B_y_center_0_with_Mx
+#SBATCH --job-name=with_RF_D_GS_center_2.87_with_Mx
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
-#SBATCH --mail-type=FAIL,INVALID_DEPEND
+#SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=10GB
 #SBATCH --output=slurm_job_info/%j/slurm-%j.out
 module load anaconda3/2022.05
@@ -21,16 +21,17 @@ echo "$0" > "${local_dir}/info.txt"
 echo "$*" >> "${local_dir}/info.txt"
 
 /usr/bin/time --output=${LOG} --verbose \
-python3 monte_carlo_odmr_floquet_B_y.py --verbose \
+python3 monte_carlo_odmr_floquet_D_GS.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
-  --param-start=1.0e-4 \
-  --param-stop=0.0e-4 \
+  --param-start=1*pi*2e6 \
+  --param-stop=0*pi*2e6 \
   --param-steps=51 \
-  --mu-By=0.0e-4 \
-  --Mx='2*pi*5e6' \
-  --Bz=0.0 \
+  --mu-D-GS=2*pi*2.87e9 \
   --Bx=0.0 \
-  --omega-rf-power=0.0 \
-  --omega-rf=0.0 \
+  --By=0.0 \
+  --Bz=0.0 \
+  --Mx=2*pi*5.0e6 \
+  --omega-rf-power=2*pi*2e6 \
+  --omega-rf=10*pi*2e6 \
   --n-avg=100
