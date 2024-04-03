@@ -199,6 +199,8 @@ def do_simulation(params):
     return params, results
 def main():
     gauss = 1e-4  # T
+    MHz = 1e6
+    pi = np.pi
     parser = argparse.ArgumentParser(
         description='ODMR simulation via Floquet, B_x Monte Carlo')
     parser.add_argument(
