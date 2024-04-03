@@ -1,13 +1,7 @@
 #! /bin/bash
 
-for i in {1..10}
+for i in {1..20}
 do 
-  sbatch sbatch_Bz_center_0_with_Mx.sh
-  sbatch sbatch_Bz_center_5_no_Mx.sh
-  sbatch sbatch_Bz_center_5_with_Mx.sh
-  sbatch sbatch_Mx_center_0_with_Bz.sh
-  sbatch sbatch_Mx_center_2_no_Bz.sh
-  sbatch sbatch_Mx_center_2_with_Bz.sh
-  sbatch sbatch_Mx_center_5_no_Bz.sh
-  sleep 1
+  sbatch sbatch_with_RF_Bx_center_0_with_Mx.sh
+  sbatch sbatch_Bx_center_0_with_Mx.sh
 done
