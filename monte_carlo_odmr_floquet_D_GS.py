@@ -324,6 +324,8 @@ def main():
             params.B_z = float(eval(args.Bz))
         if args.By is not None:
             params.B_y = float(eval(args.By))
+        if args.Bx is not None:
+            params.B_x = float(eval(args.Bx))
         if args.omega_rf_power is not None:
             params.Omega_RF_power = float(eval(args.omega_rf_power))
         if args.omega_rf is not None:
