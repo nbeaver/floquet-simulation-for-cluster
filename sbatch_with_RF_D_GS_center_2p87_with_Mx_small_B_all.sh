@@ -1,7 +1,7 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=D_GS_center_2.87_with_Mx
+#SBATCH --job-name=with_RF_D_GS_center_2.87_with_Mx_small_B_all
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=ALL
@@ -24,14 +24,14 @@ echo "$*" >> "${local_dir}/info.txt"
 python3 monte_carlo_odmr_floquet_D_GS.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
-  --param-start=2*pi*2e6 \
-  --param-stop=1*pi*2e6 \
+  --param-start=1*pi*2e6 \
+  --param-stop=0*pi*2e6 \
   --param-steps=51 \
   --mu-D-GS=2*pi*2.87e9 \
-  --Bx=0.0 \
-  --By=0.0 \
-  --Bz=0.0 \
+  --Bx=0.3e-4 \
+  --By=0.3e-4 \
+  --Bz=0.3e-4 \
   --Mx=2*pi*5.0e6 \
-  --omega-rf-power=0.0 \
-  --omega-rf=0.0 \
+  --omega-rf-power=2*pi*2e6 \
+  --omega-rf=10*pi*2e6 \
   --n-avg=100
