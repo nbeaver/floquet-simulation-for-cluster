@@ -105,9 +105,9 @@ def do_simulation(params):
     results.eigvals = np.empty(H_shape[:-1], dtype=np.dtype('float64'))
     results.eigvecs = np.empty(H_shape, dtype=np.dtype('complex128'))
 
-    results.P_0_B = np.empty(H_shape[:-2])
-    results.P_0_D = np.empty(H_shape[:-2])
-    results.P_0_0 = np.empty(H_shape[:-2])
+    results.P_0_B_raw = np.empty(H_shape[:-2])
+    results.P_0_D_raw = np.empty(H_shape[:-2])
+    results.P_0_0_raw = np.empty(H_shape[:-2])
 
     env_vars = [
         'SLURM_JOB_START_TIME',
@@ -140,9 +140,9 @@ def do_simulation(params):
                     lambda_d_prime = params.lambda_d_prime[i],
             )
             results.eigvals[i][j], results.eigvecs[i][j] = np.linalg.eigh(results.H[i][j])
-            results.P_0_B[i][j] = esdr_floquet_lib.P_alpha_beta('0', 'B', results.eigvecs[i][j])
-            results.P_0_D[i][j] = esdr_floquet_lib.P_alpha_beta('0', 'D', results.eigvecs[i][j])
-            results.P_0_0[i][j] = esdr_floquet_lib.P_alpha_beta('0', '0', results.eigvecs[i][j])
+            results.P_0_B_raw[i][j] = esdr_floquet_lib.P_alpha_beta('0', 'B', results.eigvecs[i][j])
+            results.P_0_D_raw[i][j] = esdr_floquet_lib.P_alpha_beta('0', 'D', results.eigvecs[i][j])
+            results.P_0_0_raw[i][j] = esdr_floquet_lib.P_alpha_beta('0', '0', results.eigvecs[i][j])
     t_stop = time.perf_counter()
     date_stop = datetime.datetime.now()
     del results.H
@@ -158,6 +158,11 @@ def do_simulation(params):
     results.date_stop_locale_time = date_stop.strftime("%c")
     results.date_start_unix = time.mktime(date_start.timetuple())
     results.date_stop_unix = time.mktime(date_stop.timetuple())
+
+    # Remove any sweeps that contain NaNs since these cannot be averaged.
+    results.P_0_0 = results.P_0_0_raw[~np.isnan(results.P_0_0_raw).any(axis=1)]
+    results.P_0_B = results.P_0_B_raw[~np.isnan(results.P_0_B_raw).any(axis=1)]
+    results.P_0_D = results.P_0_D_raw[~np.isnan(results.P_0_D_raw).any(axis=1)]
 
     results.P_0_0_avg = np.mean(results.P_0_0, axis=0)
     results.P_0_B_avg = np.mean(results.P_0_B, axis=0)
@@ -184,6 +189,9 @@ def do_simulation(params):
         'H',
         'eigvals',
         'eigvecs',
+        'P_0_0_raw',
+        'P_0_B_raw',
+        'P_0_D_raw',
     ]
     params.compression = {
         'MW_freqs': 'lzf',
