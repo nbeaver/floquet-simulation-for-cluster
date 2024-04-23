@@ -234,6 +234,11 @@ def main():
         default=None,
         help='B_z [T]')
     parser.add_argument(
+        '--Dgs',
+        type=str,
+        default=None,
+        help='D_gs [rad/s]')
+    parser.add_argument(
         '--omega-rf-power',
         type=str,
         default=None,
@@ -305,6 +310,8 @@ def main():
             params.B_x = float(eval(args.Bx))
         if args.Bz is not None:
             params.B_z = float(eval(args.Bz))
+        if args.Dgs is not None:
+            params.D_GS = float(eval(args.Dgs))
         if args.omega_rf_power is not None:
             params.Omega_RF_power = float(eval(args.omega_rf_power))
         if args.omega_rf is not None:
