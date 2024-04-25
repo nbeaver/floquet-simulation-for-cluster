@@ -27,7 +27,7 @@ python3 monte_carlo_odmr_floquet_D_GS.py --verbose \
   --param-start=2*pi*2e6 \
   --param-stop=1*pi*2e6 \
   --param-steps=51 \
-  --mu-D-GS=2*pi*2.87e2 \
+  --mu-D-GS=2*pi*2.87e7 \
   --Bx=0.0 \
   --By=0.0 \
   --Bz=0.0 \
