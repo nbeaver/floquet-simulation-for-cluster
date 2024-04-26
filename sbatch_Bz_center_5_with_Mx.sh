@@ -8,7 +8,7 @@
 #SBATCH --mem-per-cpu=2GB
 #SBATCH --output=slurm_job_info/%j/slurm-%j.out
 module load anaconda3/2022.05
-OUTDIR=$HOME/archive/2024/${SLURM_JOB_ID}
+OUTDIR=/work/pstevenson/n.beaver/2024/floquet-simulations/${SLURM_JOB_ID}
 LOG=time_out/time_$(date +%F_%s_%N).txt
 mkdir -p "${OUTDIR}"
 
