@@ -24,8 +24,8 @@ echo "$*" >> "${local_dir}/info.txt"
 python3 monte_carlo_odmr_floquet_D_GS.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
-  --param-start=4e6*2*pi \
-  --param-stop=3e6*2*pi \
+  --param-start=2e6*2*pi \
+  --param-stop=1e6*2*pi \
   --param-steps=51 \
   --mu-D-GS=2*pi*2.87e9 \
   --Bx=0.0 \
