@@ -1,7 +1,7 @@
 #! /bin/bash
 
-for i in {1..20}
+for i in {1..80}
 do 
-    sbatch sbatch_D_GS_center2p87_with_Mx.sh
-    sbatch sbatch_with_RF_D_GS_center_2p87_with_Mx.sh
+    sbatch sbatch_Bz_center_0_with_Mx.sh
+    sbatch sbatch_with_RF_Bz_center_0_with_Mx.sh
 done
