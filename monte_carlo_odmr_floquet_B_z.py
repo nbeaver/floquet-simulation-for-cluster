@@ -53,6 +53,7 @@ def get_params():
     return p
 
 def setup_params(params):
+    import math
     from math import pi
     MHz = 1e6
     GHz = 1e9
@@ -79,9 +80,10 @@ def setup_params(params):
     # Estimate shift based on resonant frequencies.
     shift = params.omega_RF/2. + np.hypot(V - params.omega_RF/2., params.Omega_RF_power)
     shift_Hz = shift/(2*pi)
-    # Add on an extra 15 MHz to allow for peak width.
-    params.MW_start_freq = round((params.D_GS_eff/(2*pi)) - shift_Hz - 15*MHz)
-    params.MW_stop_freq = round((params.D_GS_eff/(2*pi)) + shift_Hz + 15*MHz)
+    # Add on an extra 15 MHz to allow for peak width and bin to nearest step size.
+    params.MW_start_freq = params.MW_step * math.floor(((params.D_GS_eff/(2*pi)) - shift_Hz - 15*MHz) / params.MW_step)
+    params.MW_stop_freq  = params.MW_step * math.ceil(((params.D_GS_eff/(2*pi)) + shift_Hz + 15*MHz) / params.MW_step)
+
     params.MW_range = params.MW_stop_freq - params.MW_start_freq
     params.MW_N_steps = round(params.MW_range/params.MW_step)+1
     # TODO: also account for RF splitting
