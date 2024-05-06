@@ -205,7 +205,9 @@ def do_simulation(params):
     return params, results
 def main():
     from math import pi
+    GHz = 1e9
     MHz = 1e6
+    kHz = 1e3
     parser = argparse.ArgumentParser(
         description='ODMR simulation via Floquet, M_x Monte Carlo')
     parser.add_argument(
@@ -246,6 +248,11 @@ def main():
         type=str,
         default=None,
         help='RF frequency [rad/s]')
+    parser.add_argument(
+        '--MW-step',
+        type=str,
+        default=None,
+        help='MW step [Hz]')
     parser.add_argument(
         '--param-start',
         type=str,
@@ -314,6 +321,8 @@ def main():
             params.Omega_RF_power = float(eval(args.omega_rf_power))
         if args.omega_rf is not None:
             params.omega_RF = float(eval(args.omega_rf))
+        if args.MW_step is not None:
+            params.MW_step = float(eval(args.MW_step))
         setup_params(params)
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_M_x_{}_{:04d}.hdf5".format(args.tag_filename, i)
