@@ -252,6 +252,16 @@ def main():
         default=None,
         help='RF frequency [rad/s]')
     parser.add_argument(
+        '--MW-start-freq',
+        type=str,
+        default=None,
+        help='MW start frequency [Hz]')
+    parser.add_argument(
+        '--MW-stop-freq',
+        type=str,
+        default=None,
+        help='MW stop frequency [Hz]')
+    parser.add_argument(
         '--MW-step',
         type=str,
         default=None,
@@ -327,6 +337,20 @@ def main():
         if args.MW_step is not None:
             params.MW_step = float(eval(args.MW_step))
         setup_params(params)
+        if args.MW_start_freq is None and args.MW_stop_freq is None:
+            # This is OK.
+            pass
+        elif args.MW_start_freq is not None and args.MW_stop_freq is not None:
+            # This is OK.
+            params.MW_start_freq = float(eval(args.MW_start_freq))
+            params.MW_stop_freq = float(eval(args.MW_stop_freq))
+            params.MW_range = params.MW_stop_freq - params.MW_start_freq
+            params.MW_N_steps = round(params.MW_range / params.MW_step) + 1
+            params.MW_freqs = np.linspace(params.MW_start_freq, params.MW_stop_freq, params.MW_N_steps)
+            params.omega_MWs = params.MW_freqs * 2 * pi
+        else:
+            # This is not OK.
+            raise ValueError
         params, results = do_simulation(params)
         filename = "odmr_floquet_monte_carlo_B_z_{}_{:04d}.hdf5".format(args.tag_filename, i)
         parent_dir = os.path.join(outdir, "full")
