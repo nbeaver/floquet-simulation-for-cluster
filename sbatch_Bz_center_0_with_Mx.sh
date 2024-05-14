@@ -1,11 +1,11 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=B_z_center_0_with_Mx
+#SBATCH --job-name=3-16_B_z_center_0_with_Mx
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=2GB
+#SBATCH --mem-per-cpu=7GB
 #SBATCH --output=slurm_job_info/%j/slurm-%j.out
 module load anaconda3/2022.05
 OUTDIR=/work/pstevenson/n.beaver/2024/floquet-simulations/${SLURM_JOB_ID}
@@ -24,14 +24,16 @@ echo "$*" >> "${local_dir}/info.txt"
 python3 monte_carlo_odmr_floquet_B_z.py --verbose \
   --out-dir="${OUTDIR}" \
   --tag="${SLURM_JOB_ID}" \
-  --param-start=1.0e-4 \
-  --param-stop=0.0e-4 \
-  --param-steps=51 \
+  --param-start=16.0e-4 \
+  --param-stop=3.0e-4 \
+  --param-steps=14 \
   --mu-Bz=0e-4 \
   --Mx='2*pi*5e6' \
   --Bx=0.0 \
   --By=0.0 \
   --omega-rf-power=0.0 \
   --omega-rf=0.0 \
-  --MW-step=25*kHz \
-  --n-avg=25
+  --MW-start-freq=2.855*GHz \
+  --MW-stop-freq=2.885*GHz \
+  --MW-step=100*kHz \
+  --n-avg=1000
