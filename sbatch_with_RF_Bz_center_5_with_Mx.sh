@@ -1,7 +1,7 @@
 #! /bin/bash
 #SBATCH --nodes=1
 #SBATCH --time=24:00:00
-#SBATCH --job-name=1-2_B_z_center_5_with_Mx
+#SBATCH --job-name=1-2_with_RF_B_z_center_5_with_Mx
 #SBATCH --partition=short
 #SBATCH --kill-on-invalid-dep=yes
 #SBATCH --mail-type=ALL
@@ -31,7 +31,7 @@ python3 monte_carlo_odmr_floquet_B_z.py --verbose \
   --Mx='5e6*pi*2' \
   --Bx=0.0 \
   --By=0.0 \
-  --omega-rf-power=0.0 \
-  --omega-rf=0.0 \
+  --omega-rf-power='2e6*pi*2' \
+  --omega-rf='29.755636e6*pi*2' \
   --MW-step='100*kHz' \
   --n-avg=200
