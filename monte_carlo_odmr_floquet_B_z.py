@@ -213,6 +213,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='ODMR simulation via Floquet, B_z Monte Carlo')
     parser.add_argument(
+        '--floquet-order',
+        type=int,
+        help='order of Floquet expansion',
+        default=None,
+    )
+    parser.add_argument(
         '--n-avg',
         type=int,
         help='number of averages')
@@ -320,6 +326,8 @@ def main():
         params.sigma_B_z = sigma_B_z
         if args.n_avg is not None:
             params.N_avg = args.n_avg
+        if args.floquet_order is not None:
+            params.N = int(args.floquet_order)
         if args.mu_Bz is not None:
             params.mu_B_z = float(eval(args.mu_Bz))
         if args.Mx is not None:
